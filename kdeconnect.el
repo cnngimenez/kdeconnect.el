@@ -34,6 +34,7 @@
 
 (require 'map)
 (require 'seq)
+(require 'dired) ;; for dired support.
 
 (defgroup kdeconnect nil
   "KDEConnect integration."
@@ -232,6 +233,18 @@ number to send (it must be a number value, not string)."
                       (shell-quote-argument (cdr kdeconnect-active-device))
                       "--destination" (number-to-string destination)
                       "--send-sms" (shell-quote-argument message)) " "))))
+
+;; --------------------------------------------------
+;; Dired Support
+;; --------------------------------------------------
+
+(defun kdeconnect-send-dired ()
+  "In Dired, send the current file to the default KDEConnect device."
+  (interactive nil dired-moded)
+  (kdeconnect-send-file (dired-get-file-for-visit)))
+
+;; Add the K keymap to dired
+(keymap-set dired-mode-map "K" #'kdeconnect-send-dired)
 
 (provide 'kdeconnect)
 ;;; kdeconnect.el ends here
