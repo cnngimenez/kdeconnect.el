@@ -87,10 +87,11 @@ DEVICE-LIST is an alist with (NAME . ID) elements."
   "Parse the string into an alist of devices.
 Return an alist with (NAME . ID) for each line in the OUTPUT-STRING.
 The string must be composed of lines with \"ID NAME\" format."
-  (mapcar (lambda (line)
-            (string-match "\\([[:alnum:]]+\\) \\(.*\\)" line)
-            (cons (match-string 2 line) (match-string 1 line)))
-          (split-string output-string "\n" t)))
+  (delq nil
+        (mapcar (lambda (line)
+                  (when (string-match "\\([[:alnum:]_]+\\) \\(.*\\)" line)
+                    (cons (match-string 2 line) (match-string 1 line))))
+                (split-string output-string "\n" t))))
 
 ;;;###autoload
 (defun kdeconnect-update-kdeconnect-devices ()
